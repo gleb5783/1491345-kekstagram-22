@@ -1,19 +1,20 @@
-const randomNum = function (min, max) {
-  if (min >= max) {
-    return alert('Error');
+const checkRandomNum = function (min, max) {
+  if (min >= max || min < 0 || max < 0) {
+    return false
   }
 
   return Math.ceil(Math.random() * (max - min + 1) + min);
 };
 
-alert (randomNum(0, 100));
+checkRandomNum();
 
-const maxLenght = function (randomString, maxSimbols) {
+const checkMaxLenght = function (randomString, maxSimbols) {
   if (randomString.length > maxSimbols) {
-    return alert('Error');
+    return false
   }
 
-  return randomString.length + ' - такая длинна'
+  return true
 };
 
-alert (maxLenght('Привет', 140)); //Пришлось поставить алерт, потому что линтер ругался на console.log и на то, что переменная не используется.
+checkMaxLenght();
+
