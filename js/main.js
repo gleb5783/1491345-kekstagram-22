@@ -1,4 +1,4 @@
-const checkRandomNum = function (min, max) {
+const getRandomNum = (min, max) => {
   if (min >= max || min < 0 || max < 0) {
     return false
   }
@@ -6,15 +6,8 @@ const checkRandomNum = function (min, max) {
   return Math.ceil(Math.random() * (max - min + 1) + min);
 };
 
-checkRandomNum();
+getRandomNum();
 
-const checkMaxLenght = function (randomString, maxSimbols) {
-  if (randomString.length > maxSimbols) {
-    return false
-  }
+const checkMaxLength = (randomString, maxSimbols) => randomString.length <= maxSimbols;
 
-  return true
-};
-
-checkMaxLenght();
-
+checkMaxLength();
