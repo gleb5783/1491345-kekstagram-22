@@ -1,7 +1,3 @@
-const checkMaxLength = (randomString, maxSimbols) => randomString.length <= maxSimbols;
-
-checkMaxLength('zxc', 13);
-
 const NAMES = ['Антон', 'Глеб', 'Дарья', 'Артем', 'Маша', 'Саша', 'Алефтина', 'Игорь', 'Марк'];
 
 const MESSAGE = [
@@ -23,34 +19,57 @@ const DESCRIPTION = [
   'Это не те дройды',
   'Подписывайтесь, ставьте лайки',
   'Доброе утро',
-]
+];
 
 const NUMBER_REQUIRED_OBJECTS = 25;
+const MIN_NUMBER_FOR_ID = 1;
+const MAX_NUMBER_FOR_ID = 25;
+const MIN_NUMBER_FOR_AVATAR = 1;
+const MAX_NUMBER_FOR_AVATAR = 6;
+const MIN_COMENT_COUNT = 1;
+const MAX_COMENT_COUNT = 25;
+const MIN_LIKE = 1;
+const MAX_LIKE = 200;
+const COUNT = 25;
 
 const getRandomArrayElement = (element) => {
   return element [window._.random(0, element.length - 1)];
 };
 
-const COMMENTS = () => {
+const idsInspect = (minNumber, maxNumber, count) => {
+  const ids = [];
+  while (ids.length < count) {
+    const randNum = window._.random(minNumber, maxNumber);
+    if (!ids.includes(randNum)) {
+      ids.push(randNum);
+    }
+  }
+  return ids;
+}
 
+const getComment = (id) => {
   return {
-    id: window._.random(0, 300),
-    avatar: 'img/avatar-' + window._.random(1, 6) + '.svg',
+    id: id,
+    avatar: 'img/avatar-' + window._.random(MIN_NUMBER_FOR_AVATAR, MAX_NUMBER_FOR_AVATAR) + '.svg',
     message: getRandomArrayElement(MESSAGE),
     name: getRandomArrayElement(NAMES),
   };
 };
 
-const getDescriptionUsers = () => {
+const getDescriptionUsers = (id) => {
+  const comentCount = window._.random(MIN_COMENT_COUNT, MAX_COMENT_COUNT);
+  const comentIds = idsInspect(MIN_COMENT_COUNT, MAX_COMENT_COUNT, comentCount);
   return {
-    id: window._.random(1, 25),
-    url: 'photos/' + window._.random(1, 25) + '.jpg',
+    id: id,
+    url: 'photos/' + id + '.jpg',
     description: getRandomArrayElement(DESCRIPTION),
-    likes: window._.random(15, 200),
-    comments: COMMENTS(),
+    likes: window._.random(MIN_LIKE, MAX_LIKE),
+    comments: new Array(comentCount).fill().map((item, index) => getComment(comentIds[index])),
   };
 };
 
-const createUsersCard = new Array(NUMBER_REQUIRED_OBJECTS).fill().map(() => getDescriptionUsers());
+const ids = idsInspect(MIN_NUMBER_FOR_ID, MAX_NUMBER_FOR_ID, COUNT);
+const createUsersCard = new Array(NUMBER_REQUIRED_OBJECTS).fill().map((item, index) => getDescriptionUsers(ids[index]));
+
 
 createUsersCard;
