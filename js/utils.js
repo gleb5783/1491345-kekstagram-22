@@ -19,4 +19,6 @@ const idsInspect = (minNumber, maxNumber, count) => {
 
 const ids = idsInspect(MIN_NUMBER_FOR_ID, MAX_NUMBER_FOR_ID, COUNT);
 
+ids;
+
 export {getRandomArrayElement, idsInspect};
