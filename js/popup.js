@@ -1,19 +1,19 @@
-import {createUsersCard} from './data.js';
+import {simularOtherUsersPictures} from './data.js';
 
 const pictures = document.querySelector('.pictures');
 const picture = document.querySelector('#picture').content.querySelector('.picture');
 
-const simularOtherUsersPictures = createUsersCard;
+
 const simularListPicture = document.createDocumentFragment();
 
-simularOtherUsersPictures.forEach((createUsersCard) => {
-  const createPicture = picture.cloneNode(true);
+simularOtherUsersPictures.forEach((simularOtherUsersPictures) => {
+  const otherPicture = picture.cloneNode(true);
 
-  createPicture.querySelector('.picture__img').setAttribute('src', createUsersCard.url);
-  createPicture.querySelector('.picture__comments').textContent = createUsersCard.comments;
-  createPicture.querySelector('.picture__likes').textContent = createUsersCard.likes;
+  otherPicture.querySelector('.picture__img').src = simularOtherUsersPictures.url;
+  otherPicture.querySelector('.picture__comments').textContent = simularOtherUsersPictures.comments.length;
+  otherPicture.querySelector('.picture__likes').textContent = simularOtherUsersPictures.likes;
 
-  simularListPicture.appendChild(createPicture);
+  simularListPicture.appendChild(otherPicture);
 });
 
 pictures.appendChild(simularListPicture);
