@@ -61,5 +61,3 @@ const createUsersCard = new Array(NUMBER_REQUIRED_OBJECTS).fill().map((item, ind
 export {createUsersCard};
 
 createUsersCard;
-
-console.log(createUsersCard);
