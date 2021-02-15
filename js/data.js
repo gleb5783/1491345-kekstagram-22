@@ -23,7 +23,7 @@ const DESCRIPTION = [
   'Доброе утро',
 ];
 
-const NUMBER_REQUIRED_OBJECTS = 25;
+const NUMBER_REQUIRED_OBJECTS = 21;
 const MIN_NUMBER_FOR_AVATAR = 1;
 const MAX_NUMBER_FOR_AVATAR = 6;
 const MIN_NUMBER_FOR_ID = 1;
@@ -56,6 +56,8 @@ const getDescriptionUsers = (id) => {
   };
 };
 
-const createUsersCard = new Array(NUMBER_REQUIRED_OBJECTS).fill().map((item, index) => getDescriptionUsers(ids[index]));
+const simularOtherUsersPictures = new Array(NUMBER_REQUIRED_OBJECTS).fill().map((item, index) => getDescriptionUsers(ids[index]));
 
-createUsersCard;
+export {simularOtherUsersPictures};
+
+simularOtherUsersPictures;
