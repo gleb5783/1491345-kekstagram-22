@@ -58,4 +58,8 @@ const getDescriptionUsers = (id) => {
 
 const createUsersCard = new Array(NUMBER_REQUIRED_OBJECTS).fill().map((item, index) => getDescriptionUsers(ids[index]));
 
+export {createUsersCard};
+
 createUsersCard;
+
+console.log(createUsersCard);
