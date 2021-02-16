@@ -3,7 +3,7 @@ import {simularOtherUsersPictures, getComment} from './data.js';
 const pictures = document.querySelector('.pictures');
 const picture = document.querySelector('#picture').content.querySelector('.picture');
 const showBigPicture = document.querySelector('.big-picture');
-
+const socialComments = document.querySelector('.social__comments');
 const simularListPicture = document.createDocumentFragment();
 
 simularOtherUsersPictures.forEach((simularOtherUsersPictures) => {
@@ -25,9 +25,22 @@ simularOtherUsersPictures.forEach((simularOtherUsersPictures) => {
     const showCommentNumber = showBigPicture.querySelector('.comments-count');
     showCommentNumber.textContent = simularOtherUsersPictures.comments.length;
     const commentsPic = showBigPicture.querySelector('.social__comment .social__picture');
-    commentsPic.src = simularOtherUsersPictures.avatar;
+    const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
+    const commentFragment = document.createDocumentFragment();
+    simularOtherUsersPictures.comments.forEach(comment => {
+      const newComment = commentTemplate.cloneNode(true);
+      newComment.querySelector('img').src = comment.avatar;
+      newComment.querySelector('img').alt = comment.name;
+      newComment.querySelector('.social__text').textContent = comment.message;
+      commentFragment.appendChild(newComment);
+    });
+    socialComments.innerHTML = '';
+    socialComments.appendChild(commentFragment);
   });
+
   simularListPicture.appendChild(otherPicture);
 });
 
+
 pictures.appendChild(simularListPicture);
+
