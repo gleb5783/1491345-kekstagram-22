@@ -58,6 +58,6 @@ const getDescriptionUsers = (id) => {
 
 const simularOtherUsersPictures = new Array(NUMBER_REQUIRED_OBJECTS).fill().map((item, index) => getDescriptionUsers(ids[index]));
 
-export {simularOtherUsersPictures};
+export {simularOtherUsersPictures, getComment};
 
 simularOtherUsersPictures;
