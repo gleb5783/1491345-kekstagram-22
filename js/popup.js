@@ -12,11 +12,23 @@ simularOtherUsersPictures.forEach((simularOtherUsersPictures) => {
   otherPicture.querySelector('.picture__img').src = simularOtherUsersPictures.url;
   otherPicture.querySelector('.picture__comments').textContent = simularOtherUsersPictures.comments.length;
   otherPicture.querySelector('.picture__likes').textContent = simularOtherUsersPictures.likes;
+  showBigPicture.querySelector('.social__caption').textContent = simularOtherUsersPictures.description;
   otherPicture.addEventListener('click', () => {
+    document.querySelector('body').classList.add('modal-open');
     showBigPicture.classList.remove('hidden');
     const closeBigPic = showBigPicture.querySelector('#picture-cancel');
+    const hiddenComments = showBigPicture.querySelector('.social__comment-count');
+    const hiddenUsersComments = showBigPicture.querySelector('.social__comments');
+    const hiddenBtnComments = showBigPicture.querySelector('.comments-loader');
+    hiddenBtnComments.classList.add('hidden');
+    hiddenUsersComments.classList.add('hidden');
+    hiddenComments.classList.add('hidden');
     closeBigPic.addEventListener('click', () => {
       showBigPicture.classList.add('hidden');
+      hiddenComments.classList.remove('hidden');
+      hiddenUsersComments.classList.remove('hidden');
+      hiddenBtnComments.classList.remove('hidden');
+      document.querySelector('body').classList.remove('modal-open');
     });
     const showBigPicImg = showBigPicture.querySelector('.big-picture__img img');
     showBigPicImg.src = simularOtherUsersPictures.url;
