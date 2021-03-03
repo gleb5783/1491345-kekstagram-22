@@ -1,4 +1,4 @@
-import {simularOtherUsersPictures, getComment} from './data.js';
+import {simularOtherUsersPictures} from './data.js';
 
 const pictures = document.querySelector('.pictures');
 const picture = document.querySelector('#picture').content.querySelector('.picture');
@@ -36,7 +36,6 @@ simularOtherUsersPictures.forEach((simularOtherUsersPictures) => {
     showLike.textContent = simularOtherUsersPictures.likes;
     const showCommentNumber = showBigPicture.querySelector('.comments-count');
     showCommentNumber.textContent = simularOtherUsersPictures.comments.length;
-    const commentsPic = showBigPicture.querySelector('.social__comment .social__picture');
     const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
     const commentFragment = document.createDocumentFragment();
     simularOtherUsersPictures.comments.forEach(comment => {
