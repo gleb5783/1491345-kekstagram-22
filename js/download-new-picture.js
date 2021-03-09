@@ -4,17 +4,17 @@ const imgUpload = document.querySelector('#upload-file');
 const scaleValue = document.querySelector('.scale__control--value');
 const previewImage = document.querySelector('.img-upload__preview img');
 const smallerScale = document.querySelector('.scale__control--smaller');
+const inputHashTags = document.querySelector('.text__hashtags');
+const inputComment = document.querySelector('.text__description');
 const biggerScale = document.querySelector('.scale__control--bigger');
-const ESC_BUTTON = 'Esc';
-const ESCAPE_BUTTON = 'Escape';
 const closeForm = () => {
   imgOverlay.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
   imgUpload.value = '';
-  sliderElement.noUiSlider.destroy();
+  previewImage.style.filter = 'none';
 }
-biggerScale.disabled = true;
 
+biggerScale.disabled = true;
 
 imgUpload.addEventListener('change', () => {
   imgOverlay.classList.remove('hidden');
@@ -23,9 +23,16 @@ imgUpload.addEventListener('change', () => {
   imgOverlayClose.addEventListener('click', () => {
     closeForm();
   });
-
   document.addEventListener('keydown', (evt) => {
-    if (evt.key === ESC_BUTTON || ESCAPE_BUTTON) {
+    if (inputHashTags === document.activeElement) {
+      evt.preventDefault();
+      evt.stopPropagation();
+    }
+    else if (inputComment === document.activeElement) {
+      evt.preventDefault();
+      evt.stopPropagation();
+    }
+    else {
       evt.preventDefault();
       closeForm();
     }
@@ -45,7 +52,3 @@ biggerScale.addEventListener('click', () => {
   biggerScale.disabled = scaleValue.value === '100%';
   smallerScale.disabled = false;
 });
-
-
-
-
