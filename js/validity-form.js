@@ -1,11 +1,11 @@
 const inputHashTags = document.querySelector('.text__hashtags');
 const MAX_LENGHT_ALL_HASH_TAGS = 5;
 const MAX_LENGHT_HASH_TAGS = 20;
-const asd = 1;
-let re = /^#[a-z0-9]+$/i;
+const MIN_LENGHT_HASH_TAGS = 1;
+const regExp = /^#[a-z0-9]+$/i;
 
 function findDuplicates(arr) {
-  return arr.filter((item, index) => arr.indexOf(item) != index);
+  return arr.filter((item, index) => arr.indexOf(item) !== index);
 }
 
 function hasDuplicates(arr) {
@@ -28,7 +28,7 @@ inputHashTags.addEventListener('input', () => {
       inputHashTags.setCustomValidity('Максимум 5 ХешТегов');
     }
 
-    else if (item.length <= asd) {
+    else if (item.length <= MIN_LENGHT_HASH_TAGS) {
       inputHashTags.setCustomValidity('ХешТег не может состоять из одной #');
     }
 
@@ -36,7 +36,7 @@ inputHashTags.addEventListener('input', () => {
       inputHashTags.setCustomValidity('Нельзя использовать одинаковые ХешТеги');
     }
 
-    else if (re.test(item) !== true) {
+    else if (!regExp.test(item)) {
       inputHashTags.setCustomValidity('Нельзя использовать специальные символы');
     }
 

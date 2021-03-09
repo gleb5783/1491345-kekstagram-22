@@ -1,5 +1,3 @@
-const ESC_BUTTON = 'Esc';
-const ESCAPE_BUTTON = 'Escape';
 const getRandomArrayElement = (element) => {
   return element [window._.random(0, element.length - 1)];
 };
@@ -15,8 +13,4 @@ const idsInspect = (minNumber, maxNumber, count) => {
   return ids;
 }
 
-const isEscEvent = (evt) => {
-  return evt.key === (ESC_BUTTON || ESCAPE_BUTTON);
-};
-
-export {getRandomArrayElement, idsInspect, isEscEvent};
+export {getRandomArrayElement, idsInspect};
