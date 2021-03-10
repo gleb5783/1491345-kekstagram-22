@@ -1,7 +1,7 @@
-const inputHashTags = document.querySelector('.text__hashtags');
 const MAX_LENGHT_ALL_HASH_TAGS = 5;
 const MAX_LENGHT_HASH_TAGS = 20;
 const MIN_LENGHT_HASH_TAGS = 1;
+const inputHashTags = document.querySelector('.text__hashtags');
 const regExp = /^#[a-z0-9]+$/i;
 
 function findDuplicates(arr) {

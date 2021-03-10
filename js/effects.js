@@ -1,8 +1,8 @@
+const EFFECT_NONE = 'none';
 const previeImage = document.querySelector('.img-upload__preview img');
 const sliderElement = document.querySelector('.effect-level__slider');
 const effectValue = document.querySelector('.effect-level__value');
 const filterSlider = document.querySelector('.img-upload__effect-level');
-const EFFECT_NONE = 'none';
 
 const deleteClass = () => {
   for (let className of previeImage.classList) {
