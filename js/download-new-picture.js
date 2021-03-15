@@ -1,5 +1,6 @@
 const ESC_BUTTON = 'Esc';
 const ESCAPE_BUTTON = 'Escape';
+const asd =document.querySelector('#effect-none');
 const filterSlider = document.querySelector('.img-upload__effect-level');
 const imgOverlay = document.querySelector('.img-upload__overlay');
 const imgOverlayClose = document.querySelector('#upload-cancel');
@@ -45,6 +46,7 @@ imgUpload.addEventListener('change', () => {
 });
 
 const closeForm = () => {
+  asd.checked = true;
   filterSlider.classList.add('hidden');
   imgOverlay.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');

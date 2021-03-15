@@ -4,6 +4,7 @@ import {isEscEvent} from './utils.js';
 
 const imgForm = document.querySelector('#upload-select-image');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const errorTemplateButton = document.querySelector('#error').content.querySelector('.error__button');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const main = document.querySelector('main');
 const closeSuccessButton = successTemplate.querySelector('.success__button');
@@ -14,16 +15,33 @@ const onEscClose = (evt) => {
   }
 }
 
+const onEscErrorClose = (evt) => {
+  if(isEscEvent(evt)) {
+    errorTemplate.remove();
+  }
+}
+
 const onClickRemove = () => {
   successTemplate.remove();
+}
+
+const onClickErrorRemove = () => {
+  errorTemplate.remove();
 }
 
 const onSuccessTemplate = () => {
   successTemplate.remove();
   document.removeEventListener('keydown', onEscClose);
   document.removeEventListener('click', onClickRemove);
+  closeSuccessButton.removeEventListener('click', onSuccessTemplate);
 }
 
+const onTemplateErrorClose = () => {
+  errorTemplate.remove();
+  document.removeEventListener('click', onClickErrorRemove);
+  document.removeEventListener('keydown', onEscErrorClose);
+  errorTemplateButton.removeEventListener('click', onTemplateErrorClose);
+}
 
 
 fetch('https://22.javascript.pages.academy/kekstagram/data')
@@ -47,19 +65,25 @@ imgForm.addEventListener('submit', (evt) => {
       body: formData,
     },
   )
-    .then(() => {
-      closeForm();
-      document.addEventListener('keydown', onEscClose);
-      document.addEventListener('click', onClickRemove);
+    .then((response) => {
+      if(response.ok){
+        closeForm();
+        document.addEventListener('keydown', onEscClose);
+        document.addEventListener('click', onClickRemove);
+      }
+      else {
+        closeForm();
+        throw new Error('Somthing went wrong');
+      }
     })
     .then(() => {
       closeSuccessButton.addEventListener('click', onSuccessTemplate);
       main.appendChild(successTemplate);
     })
-    .then(() => {
-      closeSuccessButton.removeEventListener('click', onSuccessTemplate);
-    })
     .catch(() => {
+      document.addEventListener('click', onClickErrorRemove);
+      document.addEventListener('keydown', onEscErrorClose);
+      errorTemplateButton.addEventListener('click', onTemplateErrorClose);
       main.appendChild(errorTemplate);
     });
 });
