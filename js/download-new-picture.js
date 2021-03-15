@@ -1,6 +1,5 @@
 const ESC_BUTTON = 'Esc';
 const ESCAPE_BUTTON = 'Escape';
-const effectValue = document.querySelector('.effect-level__value').value = 'none';
 const filterSlider = document.querySelector('.img-upload__effect-level');
 const imgOverlay = document.querySelector('.img-upload__overlay');
 const imgOverlayClose = document.querySelector('#upload-cancel');
@@ -17,6 +16,10 @@ const onPopUpEscPress = (evt) => {
   if ([ESC_BUTTON, ESCAPE_BUTTON].includes(evt.key) && document.activeElement !== inputHashTags && document.activeElement !== inputComment) {
     closeForm();
   }
+}
+
+const onImgOverlayClose = () => {
+  closeForm();
 }
 
 const onBiggerScaleButton = () => {
@@ -37,15 +40,11 @@ imgUpload.addEventListener('change', () => {
   document.querySelector('body').classList.add('modal-open');
   smallerScale.addEventListener('click', onSmallerScaleButton);
   biggerScale.addEventListener('click', onBiggerScaleButton);
-
-  imgOverlayClose.addEventListener('click', () => {
-    closeForm();
-  });
+  imgOverlayClose.addEventListener('click', onImgOverlayClose);
   document.addEventListener('keydown', onPopUpEscPress);
 });
 
 const closeForm = () => {
-  effectValue.checked;
   filterSlider.classList.add('hidden');
   imgOverlay.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
@@ -56,9 +55,7 @@ const closeForm = () => {
   previewImage.style.transform = 'scale(1)';
   scaleValue.value = '100%';
   document.removeEventListener('keydown', onPopUpEscPress);
-  imgOverlayClose.removeEventListener('click', () => {
-    closeForm();
-  });
+  imgOverlayClose.removeEventListener('click', onImgOverlayClose);
   inputHashTags.value = '';
   inputComment.value = '';
 }

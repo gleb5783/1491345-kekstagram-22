@@ -1,7 +1,7 @@
+import {isEscEvent} from './utils.js';
+
 const MIN_COMENT_COUNT = 0;
 const MAX_COMENT_COUNT = 5;
-const ESC_BUTTON = 'Esc';
-const ESCAPE_BUTTON = 'Escape';
 const pictures = document.querySelector('.pictures');
 const bigPicture = document.querySelector('.big-picture');
 const documentBody = document.querySelector('body');
@@ -15,6 +15,11 @@ const pictureTemplate = document.querySelector('#picture').content.querySelector
 
 const picturesFragment = document.createDocumentFragment();
 
+const onNewPictureClose = (evt) => {
+  if (isEscEvent(evt)) {
+    bigPicture.classList.add('hidden');
+  }
+}
 
 const createCommentsFragment = (comments) => {
   const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
@@ -42,11 +47,7 @@ const anyUsersCard = (imgArray) => {
 
     newPicture.addEventListener('click', () => {
       bigPicture.classList.remove('hidden');
-      document.addEventListener('keydown', (evt) => {
-        if (evt.key === ESC_BUTTON || evt.key === ESCAPE_BUTTON) {
-          bigPicture.classList.add('hidden');
-        }
-      });
+      document.addEventListener('keydown', onNewPictureClose);
       documentBody.classList.add('modal-open');
       bigPictureImg.src = picture.url;
       bigPictureLikesCount.textContent = picture.likes;
@@ -66,10 +67,5 @@ bigPictureCancel.addEventListener('click', () => {
   bigPicture.classList.add('hidden');
   documentBody.classList.remove('modal-open');
 
-  document.removeEventListener('keydown', (evt) => {
-    if (evt.key === ESC_BUTTON || evt.key === ESCAPE_BUTTON) {
-      documentBody.classList.remove('modal-open');
-      bigPicture.classList.add('hidden');
-    }
-  });
+  document.removeEventListener('keydown', onNewPictureClose);
 });

@@ -1,13 +1,29 @@
 import {anyUsersCard} from './popup.js';
 import {closeForm} from './download-new-picture.js';
+import {isEscEvent} from './utils.js';
 
-const ESC_BUTTON = 'Esc';
-const ESCAPE_BUTTON = 'Escape';
 const imgForm = document.querySelector('#upload-select-image');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const main = document.querySelector('main');
 const closeSuccessButton = successTemplate.querySelector('.success__button');
+
+const onEscClose = (evt) => {
+  if(isEscEvent(evt)) {
+    successTemplate.remove();
+  }
+}
+
+const onClickRemove = () => {
+  successTemplate.remove();
+}
+
+const onSuccessTemplate = () => {
+  successTemplate.remove();
+  document.removeEventListener('keydown', onEscClose);
+  document.removeEventListener('click', onClickRemove);
+}
+
 
 
 fetch('https://22.javascript.pages.academy/kekstagram/data')
@@ -25,7 +41,7 @@ imgForm.addEventListener('submit', (evt) => {
   const formData = new FormData(evt.target);
 
   fetch(
-    'https://22.javascript.pages.academy/kkekstagram',
+    'https://22.javascript.pages.academy/kekstagram',
     {
       method: 'POST',
       body: formData,
@@ -33,33 +49,15 @@ imgForm.addEventListener('submit', (evt) => {
   )
     .then(() => {
       closeForm();
+      document.addEventListener('keydown', onEscClose);
+      document.addEventListener('click', onClickRemove);
     })
     .then(() => {
-      closeSuccessButton.addEventListener('click', () => {
-        successTemplate.remove();
-      });
-      document.addEventListener('keydown', (evt) => {
-        if(evt.key === ESCAPE_BUTTON || evt.key === ESC_BUTTON) {
-          successTemplate.remove();
-        }
-      });
-      document.addEventListener('click', () => {
-        successTemplate.remove();
-      });
+      closeSuccessButton.addEventListener('click', onSuccessTemplate);
       main.appendChild(successTemplate);
     })
     .then(() => {
-      closeSuccessButton.removeEventListener('click', () => {
-        successTemplate.remove();
-      });
-      document.removeEventListener('keydown', (evt) => {
-        if(evt.key === ESCAPE_BUTTON || evt.key === ESC_BUTTON) {
-          successTemplate.remove();
-        }
-      });
-      document.removeEventListener('click', () => {
-        successTemplate.remove();
-      });
+      closeSuccessButton.removeEventListener('click', onSuccessTemplate);
     })
     .catch(() => {
       main.appendChild(errorTemplate);
