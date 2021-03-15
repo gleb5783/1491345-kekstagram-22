@@ -43,6 +43,21 @@ const onTemplateErrorClose = () => {
   errorTemplateButton.removeEventListener('click', onTemplateErrorClose);
 }
 
+const showSuccessModal = () => {
+  closeForm();
+  document.addEventListener('keydown', onEscClose);
+  document.addEventListener('click', onClickRemove);
+  closeSuccessButton.addEventListener('click', onSuccessTemplate);
+  main.appendChild(successTemplate);
+}
+
+const showErrorModal = () => {
+  closeForm();
+  document.addEventListener('click', onClickErrorRemove);
+  document.addEventListener('keydown', onEscErrorClose);
+  errorTemplateButton.addEventListener('click', onTemplateErrorClose);
+  main.appendChild(errorTemplate);
+}
 
 fetch('https://22.javascript.pages.academy/kekstagram/data')
   .then((response) => response.json())
@@ -67,23 +82,10 @@ imgForm.addEventListener('submit', (evt) => {
   )
     .then((response) => {
       if(response.ok){
-        closeForm();
-        document.addEventListener('keydown', onEscClose);
-        document.addEventListener('click', onClickRemove);
+        showSuccessModal();
+        return;
       }
-      else {
-        closeForm();
-        throw new Error('Somthing went wrong');
-      }
+      showErrorModal();
     })
-    .then(() => {
-      closeSuccessButton.addEventListener('click', onSuccessTemplate);
-      main.appendChild(successTemplate);
-    })
-    .catch(() => {
-      document.addEventListener('click', onClickErrorRemove);
-      document.addEventListener('keydown', onEscErrorClose);
-      errorTemplateButton.addEventListener('click', onTemplateErrorClose);
-      main.appendChild(errorTemplate);
-    });
+    .catch(showErrorModal);
 });
