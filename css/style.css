@@ -1416,3 +1416,14 @@ main {
 .hidden {
   display: none;
 }
+
+.error {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
+
+.error h1 {
+  color: red;
+}
