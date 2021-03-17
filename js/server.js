@@ -61,11 +61,11 @@ const showErrorModal = () => {
 
 fetch('https://22.javascript.pages.academy/kekstagram/data')
   .then((response) => response.json())
-  .then((imgArray) => {
-    anyUsersCard(imgArray);
-    addDefaultUsersCard(imgArray);
-    addRandomUsersCard(imgArray);
-    addFilterComments(imgArray);
+  .then((images) => {
+    anyUsersCard(images);
+    addDefaultUsersCard(images);
+    addRandomUsersCard(images);
+    addFilterComments(images);
   })
   .catch(() => {
     document.body.innerHTML = '<div class=`error`><h1>Error</h1><span>Пожалуйста перезагрузите страницу</span></div>';

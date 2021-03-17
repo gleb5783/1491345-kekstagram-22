@@ -56,8 +56,8 @@ bigPictureCancel.addEventListener('click', () => {
   document.removeEventListener('keydown', onNewPictureClose);
 });
 
-const anyUsersCard = (imgArray) => {
-  imgArray.forEach((picture) => {
+const anyUsersCard = (images) => {
+  images.forEach((picture) => {
     const newPicture = pictureTemplate.cloneNode(true);
     newPicture.querySelector('.picture__img').src = picture.url;
     newPicture.querySelector('.picture__comments').textContent = picture.comments.length;
@@ -80,7 +80,7 @@ const anyUsersCard = (imgArray) => {
   pictures.appendChild(picturesFragment);
 }
 
-const onFilterRandom = (evt, imgArray) => {
+const onFilterRandom = (evt, images) => {
 
   const allUsersPictures = document.querySelectorAll('.picture');
 
@@ -88,22 +88,22 @@ const onFilterRandom = (evt, imgArray) => {
     pictures.lastChild.remove();
   }
 
-  const t = imgArray.slice().sort(sortRandomImgs).slice(0, 10);
+  const sortingRandomImages = images.slice().sort(sortRandomImgs).slice(0, 10);
 
-  anyUsersCard(t);
+  anyUsersCard(sortingRandomImages);
 }
 
 const debounceFilter = window._.debounce(onFilterRandom, 500);
 
-const addRandomUsersCard = (imgArray) => {
+const addRandomUsersCard = (images) => {
   filterRandom.addEventListener('click', (evt) => {
     document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
     evt.target.classList.add('img-filters__button--active');
-    debounceFilter(evt, imgArray);
+    debounceFilter(evt, images);
   });
 }
 
-const addDefaultUsersCard = (imgArray) => {
+const addDefaultUsersCard = (images) => {
   filterDefault.addEventListener('click', (evt) => {
     document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
     evt.target.classList.add('img-filters__button--active');
@@ -112,11 +112,11 @@ const addDefaultUsersCard = (imgArray) => {
     for (let i = 1; i <= allUsersPictures.length; i++) {
       pictures.lastChild.remove();
     }
-    anyUsersCard(imgArray);
+    anyUsersCard(images);
   });
 }
 
-const addFilterComments = (imgArray) => {
+const addFilterComments = (images) => {
 
   filterDiscuse.addEventListener('click', (evt) => {
     document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
@@ -127,9 +127,9 @@ const addFilterComments = (imgArray) => {
       pictures.lastChild.remove();
     }
 
-    const p = imgArray.slice().sort(sortCommentsImgs);
+    const sortingImagesComment = images.slice().sort(sortCommentsImgs);
 
-    anyUsersCard(p);
+    anyUsersCard(sortingImagesComment);
   });
 }
 
