@@ -2,6 +2,7 @@ import {isEscEvent} from './utils.js';
 
 const MIN_COMENT_COUNT = 0;
 const MAX_COMENT_COUNT = 5;
+const MAX_RANDOM_USERS_CARD = 10;
 const filterDiscuse = document.querySelector('#filter-discussed');
 const filterRandom = document.querySelector('#filter-random');
 const filterDefault = document.querySelector('#filter-default');
@@ -56,6 +57,16 @@ bigPictureCancel.addEventListener('click', () => {
   document.removeEventListener('keydown', onNewPictureClose);
 });
 
+const removeUsersCard = (evt) => {
+  document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
+  evt.target.classList.toggle('img-filters__button--active');
+  const allUsersPictures = document.querySelectorAll('.picture');
+
+  for (let i = 1; i <= allUsersPictures.length; i++) {
+    pictures.lastChild.remove();
+  }
+}
+
 const anyUsersCard = (images) => {
   images.forEach((picture) => {
     const newPicture = pictureTemplate.cloneNode(true);
@@ -80,56 +91,40 @@ const anyUsersCard = (images) => {
   pictures.appendChild(picturesFragment);
 }
 
-const onFilterRandom = (evt, images) => {
-
-  const allUsersPictures = document.querySelectorAll('.picture');
-
-  for (let i = 1; i <= allUsersPictures.length; i++) {
-    pictures.lastChild.remove();
+const onFilterFunction = (evt, images) => {
+  if(evt.target === filterRandom) {
+    removeUsersCard(evt);
+    const sortingRandomImages = images.slice().sort(sortRandomImgs).slice(MIN_COMENT_COUNT, MAX_RANDOM_USERS_CARD);
+    anyUsersCard(sortingRandomImages);
   }
-
-  const sortingRandomImages = images.slice().sort(sortRandomImgs).slice(0, 10);
-
-  anyUsersCard(sortingRandomImages);
+  if(evt.target === filterDefault) {
+    removeUsersCard(evt);
+    anyUsersCard(images);
+  }
+  if(evt.target === filterDiscuse) {
+    removeUsersCard(evt);
+    const sortingImagesComment = images.slice().sort(sortCommentsImgs);
+    anyUsersCard(sortingImagesComment);
+  }
 }
 
-const debounceFilter = window._.debounce(onFilterRandom, 500);
+const debounceFilter = window._.debounce(onFilterFunction, 500);
 
 const addRandomUsersCard = (images) => {
   filterRandom.addEventListener('click', (evt) => {
-    document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
-    evt.target.classList.add('img-filters__button--active');
     debounceFilter(evt, images);
   });
 }
 
 const addDefaultUsersCard = (images) => {
   filterDefault.addEventListener('click', (evt) => {
-    document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
-    evt.target.classList.add('img-filters__button--active');
-    const allUsersPictures = document.querySelectorAll('.picture');
-
-    for (let i = 1; i <= allUsersPictures.length; i++) {
-      pictures.lastChild.remove();
-    }
-    anyUsersCard(images);
+    debounceFilter(evt, images);
   });
 }
 
 const addFilterComments = (images) => {
-
   filterDiscuse.addEventListener('click', (evt) => {
-    document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
-    evt.target.classList.toggle('img-filters__button--active');
-    const allUsersPictures = document.querySelectorAll('.picture');
-
-    for (let i = 1; i <= allUsersPictures.length; i++) {
-      pictures.lastChild.remove();
-    }
-
-    const sortingImagesComment = images.slice().sort(sortCommentsImgs);
-
-    anyUsersCard(sortingImagesComment);
+    debounceFilter(evt, images);
   });
 }
 

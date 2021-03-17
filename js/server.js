@@ -1,4 +1,4 @@
-import {anyUsersCard, addDefaultUsersCard, addRandomUsersCard, addFilterComments} from './popup.js';
+import {anyUsersCard, addDefaultUsersCard, addRandomUsersCard, addFilterComments} from './users-card-filter.js';
 import {closeForm} from './download-new-picture.js';
 import {isEscEvent} from './utils.js';
 
