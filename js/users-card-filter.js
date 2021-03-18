@@ -3,6 +3,7 @@ import {isEscEvent} from './utils.js';
 const MIN_COMENT_COUNT = 0;
 const MAX_COMENT_COUNT = 5;
 const MAX_RANDOM_USERS_CARD = 10;
+const loadMoreButtton = document.querySelector('.social__comments-loader');
 const filterDiscuse = document.querySelector('#filter-discussed');
 const filterRandom = document.querySelector('#filter-random');
 const filterDefault = document.querySelector('#filter-default');
@@ -18,13 +19,6 @@ const bigPictureCancel = bigPicture.querySelector('#picture-cancel');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const picturesFragment = document.createDocumentFragment();
-
-const onNewPictureClose = (evt) => {
-  if (isEscEvent(evt)) {
-    bigPicture.classList.add('hidden');
-    documentBody.classList.remove('modal-open');
-  }
-}
 
 const createCommentsFragment = (comments) => {
   const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
@@ -50,13 +44,6 @@ const sortRandomImgs = () => {
   return 0.5 - Math.random();
 }
 
-bigPictureCancel.addEventListener('click', () => {
-  bigPicture.classList.add('hidden');
-  documentBody.classList.remove('modal-open');
-
-  document.removeEventListener('keydown', onNewPictureClose);
-});
-
 const removeUsersCard = (evt) => {
   document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
   evt.target.classList.toggle('img-filters__button--active');
@@ -75,9 +62,33 @@ const anyUsersCard = (images) => {
     newPicture.querySelector('.picture__likes').textContent = picture.likes;
 
     newPicture.addEventListener('click', () => {
-      bigPicture.classList.remove('hidden');
+      let i = 5;
+      const showMoreComments = () => {
+        bigPictureComments.innerHTML = '';
+        i = i + 5;
+        bigPictureComments.appendChild(createCommentsFragment(picture.comments.slice(MIN_COMENT_COUNT, i)));
+
+        return i
+      }
+
+      const onNewPictureClose = (evt) => {
+        if (isEscEvent(evt)) {
+          bigPicture.classList.add('hidden');
+          documentBody.classList.remove('modal-open');
+          loadMoreButtton.removeEventListener('click', showMoreComments);
+        }
+      }
+      bigPictureCancel.addEventListener('click', () => {
+        bigPicture.classList.add('hidden');
+        documentBody.classList.remove('modal-open');
+        loadMoreButtton.removeEventListener('click', showMoreComments);
+        document.removeEventListener('keydown', onNewPictureClose);
+      });
+      loadMoreButtton.addEventListener('click', showMoreComments);
       document.addEventListener('keydown', onNewPictureClose);
+      bigPicture.classList.remove('hidden');
       documentBody.classList.add('modal-open');
+
       bigPictureImg.src = picture.url;
       bigPictureLikesCount.textContent = picture.likes;
       bigPictureCommentsCount.textContent = picture.comments.length;
@@ -90,6 +101,8 @@ const anyUsersCard = (images) => {
   });
   pictures.appendChild(picturesFragment);
 }
+
+
 
 const onFilterFunction = (evt, images) => {
   if(evt.target === filterRandom) {
