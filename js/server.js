@@ -1,4 +1,4 @@
-import {anyUsersCard} from './popup.js';
+import {anyUsersCard, addDefaultUsersCard, addRandomUsersCard, addFilterComments} from './users-card-filter.js';
 import {closeForm} from './download-new-picture.js';
 import {isEscEvent} from './utils.js';
 
@@ -61,8 +61,11 @@ const showErrorModal = () => {
 
 fetch('https://22.javascript.pages.academy/kekstagram/data')
   .then((response) => response.json())
-  .then((imgArray) => {
-    anyUsersCard(imgArray);
+  .then((images) => {
+    anyUsersCard(images);
+    addDefaultUsersCard(images);
+    addRandomUsersCard(images);
+    addFilterComments(images);
   })
   .catch(() => {
     document.body.innerHTML = '<div class=`error`><h1>Error</h1><span>Пожалуйста перезагрузите страницу</span></div>';
@@ -89,3 +92,4 @@ imgForm.addEventListener('submit', (evt) => {
     })
     .catch(showErrorModal);
 });
+

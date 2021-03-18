@@ -2,6 +2,10 @@ import {isEscEvent} from './utils.js';
 
 const MIN_COMENT_COUNT = 0;
 const MAX_COMENT_COUNT = 5;
+const MAX_RANDOM_USERS_CARD = 10;
+const filterDiscuse = document.querySelector('#filter-discussed');
+const filterRandom = document.querySelector('#filter-random');
+const filterDefault = document.querySelector('#filter-default');
 const pictures = document.querySelector('.pictures');
 const bigPicture = document.querySelector('.big-picture');
 const documentBody = document.querySelector('body');
@@ -18,6 +22,7 @@ const picturesFragment = document.createDocumentFragment();
 const onNewPictureClose = (evt) => {
   if (isEscEvent(evt)) {
     bigPicture.classList.add('hidden');
+    documentBody.classList.remove('modal-open');
   }
 }
 
@@ -37,10 +42,34 @@ const createCommentsFragment = (comments) => {
   return commentFragment;
 }
 
-const anyUsersCard = (imgArray) => {
-  imgArray.forEach((picture) => {
-    const newPicture = pictureTemplate.cloneNode(true);
+const sortCommentsImgs = (img1, img2) => {
+  return img1.comments.length > img2.comments.length ? -1 : 1;
+}
 
+const sortRandomImgs = () => {
+  return 0.5 - Math.random();
+}
+
+bigPictureCancel.addEventListener('click', () => {
+  bigPicture.classList.add('hidden');
+  documentBody.classList.remove('modal-open');
+
+  document.removeEventListener('keydown', onNewPictureClose);
+});
+
+const removeUsersCard = (evt) => {
+  document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
+  evt.target.classList.toggle('img-filters__button--active');
+  const allUsersPictures = document.querySelectorAll('.picture');
+
+  for (let i = 1; i <= allUsersPictures.length; i++) {
+    pictures.lastChild.remove();
+  }
+}
+
+const anyUsersCard = (images) => {
+  images.forEach((picture) => {
+    const newPicture = pictureTemplate.cloneNode(true);
     newPicture.querySelector('.picture__img').src = picture.url;
     newPicture.querySelector('.picture__comments').textContent = picture.comments.length;
     newPicture.querySelector('.picture__likes').textContent = picture.likes;
@@ -61,11 +90,44 @@ const anyUsersCard = (imgArray) => {
   });
   pictures.appendChild(picturesFragment);
 }
-export {anyUsersCard};
 
-bigPictureCancel.addEventListener('click', () => {
-  bigPicture.classList.add('hidden');
-  documentBody.classList.remove('modal-open');
+const onFilterFunction = (evt, images) => {
+  if(evt.target === filterRandom) {
+    removeUsersCard(evt);
+    const sortingRandomImages = images.slice().sort(sortRandomImgs).slice(MIN_COMENT_COUNT, MAX_RANDOM_USERS_CARD);
+    anyUsersCard(sortingRandomImages);
+  }
+  if(evt.target === filterDefault) {
+    removeUsersCard(evt);
+    anyUsersCard(images);
+  }
+  if(evt.target === filterDiscuse) {
+    removeUsersCard(evt);
+    const sortingImagesComment = images.slice().sort(sortCommentsImgs);
+    anyUsersCard(sortingImagesComment);
+  }
+}
 
-  document.removeEventListener('keydown', onNewPictureClose);
-});
+const debounceFilter = window._.debounce(onFilterFunction, 500);
+
+const addRandomUsersCard = (images) => {
+  filterRandom.addEventListener('click', (evt) => {
+    debounceFilter(evt, images);
+  });
+}
+
+const addDefaultUsersCard = (images) => {
+  filterDefault.addEventListener('click', (evt) => {
+    debounceFilter(evt, images);
+  });
+}
+
+const addFilterComments = (images) => {
+  filterDiscuse.addEventListener('click', (evt) => {
+    debounceFilter(evt, images);
+  });
+}
+
+export {anyUsersCard, addFilterComments, addRandomUsersCard, addDefaultUsersCard};
+
+
