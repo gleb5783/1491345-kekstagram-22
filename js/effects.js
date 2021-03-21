@@ -1,12 +1,12 @@
 const EFFECT_NONE = 'none';
-const previeImage = document.querySelector('.img-upload__preview img');
+const previewImage = document.querySelector('.img-upload__preview img');
 const sliderElement = document.querySelector('.effect-level__slider');
 const effectValue = document.querySelector('.effect-level__value');
 const filterSlider = document.querySelector('.img-upload__effect-level');
 
 const deleteClass = () => {
-  for (let className of previeImage.classList) {
-    previeImage.classList.remove(className);
+  for (let className of previewImage.classList) {
+    previewImage.classList.remove(className);
   }
 }
 
@@ -24,7 +24,7 @@ const effects = {
       start: 1,
       step: 0.1,
     },
-    getFilterStyle: (effectValue) => 'grayscale(' + Number(effectValue) + ')',
+    getFilterStyle: (effectValue) => `grayscale(${Number(effectValue)})`,
   },
 
   sepia: {
@@ -36,7 +36,7 @@ const effects = {
       start: 1,
       step: 0.1,
     },
-    getFilterStyle: (effectValue) => 'sepia(' + Number(effectValue) + ')',
+    getFilterStyle: (effectValue) => `sepia(${Number(effectValue)})`,
   },
 
   marvin: {
@@ -48,7 +48,7 @@ const effects = {
       start: 100,
       step: 1,
     },
-    getFilterStyle: (effectValue) => 'invert(' + Number(effectValue) + '%' + ')',
+    getFilterStyle: (effectValue) => `invert(${Number(effectValue)}%)`,
   },
 
   phobos: {
@@ -60,7 +60,7 @@ const effects = {
       start: 3,
       step: 0.1,
     },
-    getFilterStyle: (effectValue) => 'blur(' + Number(effectValue) + 'px' + ')',
+    getFilterStyle: (effectValue) => `blur(${Number(effectValue)}px)`,
   },
 
   heat: {
@@ -72,7 +72,7 @@ const effects = {
       start: 3,
       step: 0.1,
     },
-    getFilterStyle: (effectValue) => 'brightness(' + Number(effectValue) + ')',
+    getFilterStyle: (effectValue) => `brightness(${Number(effectValue)})`,
   },
 }
 
@@ -86,25 +86,37 @@ window.noUiSlider.create(sliderElement, {
   connect: 'lower',
 });
 
-for(let effectName in effects) {
-  document.querySelector(`#effect-${effectName}`).addEventListener('change', () => {
-    deleteClass();
-    if (effectName === EFFECT_NONE) {
-      effectValue.value = '';
-      previeImage.style.filter = '';
-      filterSlider.classList.add('hidden');
+const changeFilterSetings = () => {
+  for(let effectName in effects) {
+    const effectNames = document.querySelector(`#effect-${effectName}`);
+    const applyFilterEfect = () => {
+      deleteClass();
+      if (effectName === EFFECT_NONE) {
+        effectValue.value = '';
+        previewImage.style.filter = '';
+        filterSlider.classList.add('hidden');
+      }
+      else {
+        filterSlider.classList.remove('hidden');
+        previewImage.classList.add(`effects__preview--${effectName}`);
+        sliderElement.noUiSlider.on('update', (values, handle) => {
+          effectValue.value = values[handle];
+          previewImage.style.filter = effects[effectName].getFilterStyle(effectValue.value);
+        });
+
+        sliderElement.noUiSlider.updateOptions(effects[effectName].sliderSettings);
+      }
+    }
+
+    if (document.querySelector('body').classList.contains('modal-open')) {
+      effectNames.removeEventListener('change', applyFilterEfect);
     }
     else {
-      filterSlider.classList.remove('hidden');
-      previeImage.classList.add(`effects__preview--${effectName}`);
-      sliderElement.noUiSlider.on('update', (values, handle) => {
-        effectValue.value = values[handle];
-        previeImage.style.filter = effects[effectName].getFilterStyle(effectValue.value);
-      });
-
-      sliderElement.noUiSlider.updateOptions(effects[effectName].sliderSettings);
+      effectNames.addEventListener('change', applyFilterEfect);
     }
-  });
+  }
 }
+
+export{changeFilterSetings};
 
 
