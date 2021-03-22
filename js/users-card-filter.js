@@ -77,12 +77,12 @@ const renderUsersCard = (images) => {
       const onBigPictureClose = () => {
         bigPicture.classList.add('hidden');
         documentBody.classList.remove('modal-open');
-        loadMoreButton.removeEventListener('click', showMoreCommentsHandler);
+        loadMoreButton.removeEventListener('click', onShowMoreComments);
         document.removeEventListener('keydown', onNewPictureClose);
         bigPictureCancel.removeEventListener('click', onBigPictureClose);
       }
 
-      const showMoreCommentsHandler = () => {
+      const onShowMoreComments = () => {
         bigPictureComments.innerHTML = '';
         i = i + 5;
         bigPictureComments.appendChild(createCommentsFragment(picture.comments.slice(MIN_COMMENT_COUNT, i)));
@@ -101,14 +101,14 @@ const renderUsersCard = (images) => {
         if (isEscEvent(evt)) {
           bigPicture.classList.add('hidden');
           documentBody.classList.remove('modal-open');
-          loadMoreButton.removeEventListener('click', showMoreCommentsHandler);
+          loadMoreButton.removeEventListener('click', onShowMoreComments);
           bigPictureCancel.removeEventListener('click', onBigPictureClose);
         }
       }
 
       bigPictureCancel.addEventListener('click', onBigPictureClose);
 
-      loadMoreButton.addEventListener('click', showMoreCommentsHandler);
+      loadMoreButton.addEventListener('click', onShowMoreComments);
       document.addEventListener('keydown', onNewPictureClose);
       bigPicture.classList.remove('hidden');
       documentBody.classList.add('modal-open');

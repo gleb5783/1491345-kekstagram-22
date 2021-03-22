@@ -1,6 +1,6 @@
 import {isEscEvent} from './utils.js';
 import {changeFilterSetings} from './effects.js';
-import {submitImageForm} from './server.js';
+import {onSubmitImageForm} from './server.js';
 import {onHashTagsInput} from './validity-form.js';
 
 const MIN_SCALE_VALUE = 25;
@@ -29,24 +29,24 @@ const onImgOverlayClose = () => {
   closeForm();
 }
 
-const onScaleValue = (cb)  => {
-  scaleValue.value = `${parseInt(scaleValue.value) + cb}%`;
+const addScaleValue = (value)  => {
+  scaleValue.value = `${parseInt(scaleValue.value) + value}%`;
   previewImage.style.transform = `scale(${parseInt(scaleValue.value) / MAX_SCALE_VALUE})`;
 }
 
 const onBiggerScaleButton = () => {
-  onScaleValue(MIN_SCALE_VALUE);
+  addScaleValue(MIN_SCALE_VALUE);
   biggerScale.disabled = scaleValue.value === '100%';
   smallerScale.disabled = false;
 }
 
 const onSmallerScaleButton = () => {
-  onScaleValue(-MIN_SCALE_VALUE)
+  addScaleValue(-MIN_SCALE_VALUE)
   smallerScale.disabled = scaleValue.value === '25%';
   biggerScale.disabled = false;
 }
 imgUpload.addEventListener('change', () => {
-  imgForm.addEventListener('submit', submitImageForm);
+  imgForm.addEventListener('submit', onSubmitImageForm);
   inputHashTags.addEventListener('input', onHashTagsInput);
   changeFilterSetings();
   imgOverlay.classList.remove('hidden');
@@ -59,7 +59,7 @@ imgUpload.addEventListener('change', () => {
 
 const closeForm = () => {
   inputHashTags.removeEventListener('input', onHashTagsInput);
-  imgForm.removeEventListener('submit', submitImageForm);
+  imgForm.removeEventListener('submit', onSubmitImageForm);
   effectNone.checked = true;
   filterSlider.classList.add('hidden');
   imgOverlay.classList.add('hidden');

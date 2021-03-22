@@ -89,7 +89,7 @@ window.noUiSlider.create(sliderElement, {
 const changeFilterSetings = () => {
   for(let effectName in effects) {
     const effectNames = document.querySelector(`#effect-${effectName}`);
-    const applyFilterEfect = () => {
+    const onApplyFilterEfect = () => {
       deleteClass();
       if (effectName === EFFECT_NONE) {
         effectValue.value = '';
@@ -107,13 +107,7 @@ const changeFilterSetings = () => {
         sliderElement.noUiSlider.updateOptions(effects[effectName].sliderSettings);
       }
     }
-
-    if (document.querySelector('body').classList.contains('modal-open')) {
-      effectNames.removeEventListener('change', applyFilterEfect);
-    }
-    else {
-      effectNames.addEventListener('change', applyFilterEfect);
-    }
+    effectNames.addEventListener('change', onApplyFilterEfect);
   }
 }
 

@@ -13,18 +13,18 @@ const filter = document.querySelector('.img-filters');
 const onEscClose = (evt) => {
   if(isEscEvent(evt)) {
     successTemplate.remove();
-    imgForm.removeEventListener('submit', submitImageForm);
+    imgForm.removeEventListener('submit', onSubmitImageForm);
   }
 }
 
 const onEscErrorClose = (evt) => {
   if(isEscEvent(evt)) {
     errorTemplate.remove();
-    imgForm.removeEventListener('submit', submitImageForm);
+    imgForm.removeEventListener('submit', onSubmitImageForm);
   }
 }
 
-const submitImageForm = (evt) => {
+const onSubmitImageForm = (evt) => {
   evt.preventDefault();
   const formData = new FormData(evt.target);
 
@@ -47,12 +47,12 @@ const submitImageForm = (evt) => {
 
 const onClickRemove = () => {
   successTemplate.remove();
-  imgForm.removeEventListener('submit', submitImageForm);
+  imgForm.removeEventListener('submit', onSubmitImageForm);
 }
 
 const onClickErrorRemove = () => {
   errorTemplate.remove();
-  imgForm.removeEventListener('submit', submitImageForm);
+  imgForm.removeEventListener('submit', onSubmitImageForm);
 }
 
 const onSuccessTemplate = () => {
@@ -100,7 +100,7 @@ fetch('https://22.javascript.pages.academy/kekstagram/data')
     document.body.innerHTML = '<div class=`error`><h1>Error</h1><span>Пожалуйста перезагрузите страницу</span></div>';
   });
 
-export {submitImageForm};
+export {onSubmitImageForm};
 
 
 
