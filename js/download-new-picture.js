@@ -17,7 +17,7 @@ const smallerScale = document.querySelector('.scale__control--smaller');
 const inputHashTags = document.querySelector('.text__hashtags');
 const inputComment = document.querySelector('.text__description');
 const biggerScale = document.querySelector('.scale__control--bigger');
-biggerScale.disabled = true;
+
 
 const onPopUpEscPress = (evt) => {
   if (isEscEvent(evt) && document.activeElement !== inputHashTags && document.activeElement !== inputComment) {
@@ -36,16 +36,23 @@ const addScaleValue = (value)  => {
 
 const onBiggerScaleButton = () => {
   addScaleValue(MIN_SCALE_VALUE);
-  biggerScale.disabled = scaleValue.value === '100%';
   smallerScale.disabled = false;
+  if (scaleValue.value === '100%') {
+    biggerScale.disabled = true;
+  }
 }
 
 const onSmallerScaleButton = () => {
-  addScaleValue(-MIN_SCALE_VALUE)
-  smallerScale.disabled = scaleValue.value === '25%';
+  addScaleValue(-MIN_SCALE_VALUE);
   biggerScale.disabled = false;
+  if (scaleValue.value === '25%') {
+    smallerScale.disabled = true;
+  }
 }
+
 imgUpload.addEventListener('change', () => {
+  smallerScale.disabled = false;
+  biggerScale.disabled = true;
   imgForm.addEventListener('submit', onSubmitImageForm);
   inputHashTags.addEventListener('input', onHashTagsInput);
   changeFilterSetings();
@@ -77,7 +84,3 @@ const closeForm = () => {
 }
 
 export {closeForm};
-
-
-
-

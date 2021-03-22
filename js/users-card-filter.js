@@ -1,6 +1,7 @@
 import {isEscEvent} from './utils.js';
 
 const MIN_COMMENT_COUNT = 0;
+const MAX_FIRST_COMMENTS = 5;
 const MAX_RANDOM_USERS_CARD = 10;
 const DEBOUNCE_DELAY = 500;
 const loadMoreButton = document.querySelector('.social__comments-loader');
@@ -84,7 +85,7 @@ const renderUsersCard = (images) => {
 
       const onShowMoreComments = () => {
         bigPictureComments.innerHTML = '';
-        i = i + 5;
+        i = i + MAX_FIRST_COMMENTS;
         bigPictureComments.appendChild(createCommentsFragment(picture.comments.slice(MIN_COMMENT_COUNT, i)));
 
         if (i > picture.comments.length) {
@@ -113,7 +114,7 @@ const renderUsersCard = (images) => {
       bigPicture.classList.remove('hidden');
       documentBody.classList.add('modal-open');
       bigPictureImg.src = picture.url;
-      bigPictureStartCommentsCount.textContent = 5;
+      bigPictureStartCommentsCount.textContent = MAX_FIRST_COMMENTS;
       if(i >= picture.comments.length) {
         bigPictureStartCommentsCount.textContent = picture.comments.length;
       }
