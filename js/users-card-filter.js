@@ -1,9 +1,10 @@
 import {isEscEvent} from './utils.js';
 
-const MIN_COMENT_COUNT = 0;
-const MAX_COMENT_COUNT = 5;
+const MIN_COMMENT_COUNT = 0;
 const MAX_RANDOM_USERS_CARD = 10;
-const filterDiscuse = document.querySelector('#filter-discussed');
+const DEBOUNCE_DELAY = 500;
+const loadMoreButton = document.querySelector('.social__comments-loader');
+const filterDiscussed = document.querySelector('#filter-discussed');
 const filterRandom = document.querySelector('#filter-random');
 const filterDefault = document.querySelector('#filter-default');
 const pictures = document.querySelector('.pictures');
@@ -12,19 +13,13 @@ const documentBody = document.querySelector('body');
 const bigPictureComments = document.querySelector('.social__comments');
 const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
 const bigPictureLikesCount = bigPicture.querySelector('.likes-count');
+const bigPictureStartCommentsCount = bigPicture.querySelector('.comment-start');
 const bigPictureCommentsCount = bigPicture.querySelector('.comments-count');
 const bigPictureCancel = bigPicture.querySelector('#picture-cancel');
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const picturesFragment = document.createDocumentFragment();
-
-const onNewPictureClose = (evt) => {
-  if (isEscEvent(evt)) {
-    bigPicture.classList.add('hidden');
-    documentBody.classList.remove('modal-open');
-  }
-}
 
 const createCommentsFragment = (comments) => {
   const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
@@ -50,13 +45,6 @@ const sortRandomImgs = () => {
   return 0.5 - Math.random();
 }
 
-bigPictureCancel.addEventListener('click', () => {
-  bigPicture.classList.add('hidden');
-  documentBody.classList.remove('modal-open');
-
-  document.removeEventListener('keydown', onNewPictureClose);
-});
-
 const removeUsersCard = (evt) => {
   document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
   evt.target.classList.toggle('img-filters__button--active');
@@ -67,7 +55,16 @@ const removeUsersCard = (evt) => {
   }
 }
 
-const anyUsersCard = (images) => {
+const closeCommentLoadButton = (picture, i) => {
+  if(i >= picture.comments.length) {
+    loadMoreButton.classList.add('hidden');
+  }
+  else {
+    loadMoreButton.classList.remove('hidden');
+  }
+}
+
+const renderUsersCard = (images) => {
   images.forEach((picture) => {
     const newPicture = pictureTemplate.cloneNode(true);
     newPicture.querySelector('.picture__img').src = picture.url;
@@ -75,15 +72,56 @@ const anyUsersCard = (images) => {
     newPicture.querySelector('.picture__likes').textContent = picture.likes;
 
     newPicture.addEventListener('click', () => {
-      bigPicture.classList.remove('hidden');
+      let i = 5;
+
+      const onBigPictureClose = () => {
+        bigPicture.classList.add('hidden');
+        documentBody.classList.remove('modal-open');
+        loadMoreButton.removeEventListener('click', onShowMoreComments);
+        document.removeEventListener('keydown', onNewPictureClose);
+        bigPictureCancel.removeEventListener('click', onBigPictureClose);
+      }
+
+      const onShowMoreComments = () => {
+        bigPictureComments.innerHTML = '';
+        i = i + 5;
+        bigPictureComments.appendChild(createCommentsFragment(picture.comments.slice(MIN_COMMENT_COUNT, i)));
+
+        if (i > picture.comments.length) {
+          bigPictureStartCommentsCount.textContent = picture.comments.length;
+        }
+        else {
+          bigPictureStartCommentsCount.textContent = i;
+        }
+        closeCommentLoadButton(picture, i);
+        return i
+      }
+
+      const onNewPictureClose = (evt) => {
+        if (isEscEvent(evt)) {
+          bigPicture.classList.add('hidden');
+          documentBody.classList.remove('modal-open');
+          loadMoreButton.removeEventListener('click', onShowMoreComments);
+          bigPictureCancel.removeEventListener('click', onBigPictureClose);
+        }
+      }
+
+      bigPictureCancel.addEventListener('click', onBigPictureClose);
+
+      loadMoreButton.addEventListener('click', onShowMoreComments);
       document.addEventListener('keydown', onNewPictureClose);
+      bigPicture.classList.remove('hidden');
       documentBody.classList.add('modal-open');
       bigPictureImg.src = picture.url;
+      bigPictureStartCommentsCount.textContent = 5;
+      if(i >= picture.comments.length) {
+        bigPictureStartCommentsCount.textContent = picture.comments.length;
+      }
       bigPictureLikesCount.textContent = picture.likes;
       bigPictureCommentsCount.textContent = picture.comments.length;
       bigPictureComments.innerHTML = '';
-
-      bigPictureComments.appendChild(createCommentsFragment(picture.comments.slice(MIN_COMENT_COUNT, MAX_COMENT_COUNT)));
+      closeCommentLoadButton(picture, i);
+      bigPictureComments.appendChild(createCommentsFragment(picture.comments.slice(MIN_COMMENT_COUNT, i)));
     });
 
     picturesFragment.appendChild(newPicture);
@@ -91,43 +129,48 @@ const anyUsersCard = (images) => {
   pictures.appendChild(picturesFragment);
 }
 
+
+
 const onFilterFunction = (evt, images) => {
   if(evt.target === filterRandom) {
     removeUsersCard(evt);
-    const sortingRandomImages = images.slice().sort(sortRandomImgs).slice(MIN_COMENT_COUNT, MAX_RANDOM_USERS_CARD);
-    anyUsersCard(sortingRandomImages);
+    const sortingRandomImages = images.slice().sort(sortRandomImgs).slice(MIN_COMMENT_COUNT, MAX_RANDOM_USERS_CARD);
+    renderUsersCard(sortingRandomImages);
   }
   if(evt.target === filterDefault) {
     removeUsersCard(evt);
-    anyUsersCard(images);
+    renderUsersCard(images);
   }
-  if(evt.target === filterDiscuse) {
+  if(evt.target === filterDiscussed) {
     removeUsersCard(evt);
     const sortingImagesComment = images.slice().sort(sortCommentsImgs);
-    anyUsersCard(sortingImagesComment);
+    renderUsersCard(sortingImagesComment);
   }
 }
-
-const debounceFilter = window._.debounce(onFilterFunction, 500);
+const onDebounceFilterImages = (evt, images) => {
+  debounceFilter(evt, images);
+}
+const debounceFilter = window._.debounce(onFilterFunction, DEBOUNCE_DELAY);
 
 const addRandomUsersCard = (images) => {
   filterRandom.addEventListener('click', (evt) => {
-    debounceFilter(evt, images);
+    onDebounceFilterImages(evt, images);
   });
 }
 
 const addDefaultUsersCard = (images) => {
   filterDefault.addEventListener('click', (evt) => {
-    debounceFilter(evt, images);
+    onDebounceFilterImages(evt, images);
   });
 }
 
 const addFilterComments = (images) => {
-  filterDiscuse.addEventListener('click', (evt) => {
-    debounceFilter(evt, images);
+  filterDiscussed.addEventListener('click', (evt) => {
+    onDebounceFilterImages(evt, images);
   });
 }
 
-export {anyUsersCard, addFilterComments, addRandomUsersCard, addDefaultUsersCard};
+
+export {renderUsersCard, addFilterComments, addRandomUsersCard, addDefaultUsersCard};
 
 
