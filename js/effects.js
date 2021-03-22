@@ -1,4 +1,8 @@
 const EFFECT_NONE = 'none';
+const MIN_RANGE = 0;
+const START_SLIDER = 80;
+const STEP_SLIDER = 1;
+const MAX_RANGE = 100;
 const previewImage = document.querySelector('.img-upload__preview img');
 const sliderElement = document.querySelector('.effect-level__slider');
 const effectValue = document.querySelector('.effect-level__value');
@@ -78,11 +82,11 @@ const effects = {
 
 window.noUiSlider.create(sliderElement, {
   range: {
-    min: 0,
-    max: 100,
+    min: MIN_RANGE,
+    max: MAX_RANGE,
   },
-  start: 80,
-  step: 1,
+  start: START_SLIDER,
+  step: STEP_SLIDER,
   connect: 'lower',
 });
 

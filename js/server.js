@@ -2,7 +2,6 @@ import {renderUsersCard, addDefaultUsersCard, addRandomUsersCard, addFilterComme
 import {closeForm} from './download-new-picture.js';
 import {isEscEvent} from './utils.js';
 
-const imgForm = document.querySelector('#upload-select-image');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorTemplateButton = document.querySelector('#error').content.querySelector('.error__button');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
@@ -13,14 +12,12 @@ const filter = document.querySelector('.img-filters');
 const onEscClose = (evt) => {
   if(isEscEvent(evt)) {
     successTemplate.remove();
-    imgForm.removeEventListener('submit', onSubmitImageForm);
   }
 }
 
 const onEscErrorClose = (evt) => {
   if(isEscEvent(evt)) {
     errorTemplate.remove();
-    imgForm.removeEventListener('submit', onSubmitImageForm);
   }
 }
 
@@ -47,12 +44,10 @@ const onSubmitImageForm = (evt) => {
 
 const onClickRemove = () => {
   successTemplate.remove();
-  imgForm.removeEventListener('submit', onSubmitImageForm);
 }
 
 const onClickErrorRemove = () => {
   errorTemplate.remove();
-  imgForm.removeEventListener('submit', onSubmitImageForm);
 }
 
 const onSuccessTemplate = () => {
